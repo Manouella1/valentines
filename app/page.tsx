@@ -1,33 +1,159 @@
-import AcmeLogo from '@/app/ui/acme-logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+"use client";
 
-export default function Page() {
+import React, { useState, useRef } from "react";
+
+const messages: string[] = [
+  "Are you sure?",
+  "Really sure??",
+  "Are you positive?",
+  "Pookie please...",
+  "Just think about it!",
+  "If you say no, I will be really sad...",
+  "I will be very sad...",
+  "I will be very very very sad...",
+  "Ok fine, I will stop asking...",
+  "Just kidding, say yes please! ❤️",
+];
+
+const ValentinePage: React.FC = () => {
+  const [messageIndex, setMessageIndex] = useState<number>(0);
+  const [noButtonText, setNoButtonText] = useState<string>("No");
+  const [showPage2, setShowPage2] = useState<boolean>(false);
+  const yesButtonRef = useRef<HTMLButtonElement>(null);
+
+  const handleNoClick = () => {
+    setNoButtonText(messages[messageIndex]);
+
+    setMessageIndex((prev) => (prev + 1) % messages.length);
+
+    if (yesButtonRef.current) {
+      const currentSize = parseFloat(
+        window.getComputedStyle(yesButtonRef.current).fontSize
+      );
+      yesButtonRef.current.style.fontSize = `${currentSize * 1.5}px`;
+    }
+  };
+
+  const handleYesClick = () => {
+    setShowPage2(true);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        {/* <AcmeLogo /> */}
-      </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Welcome to Acme.</strong> This is the example for the{' '}
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Next.js Learn Course
-            </a>
-            , brought to you by Vercel.
-          </p>
-          <Link
-            href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
+    <>
+      {!showPage2 ? (
+        <div className="container" id="page1">
+          <h1>Will you be my Valentine?</h1>
+          <div className="buttons">
+            <button
+              ref={yesButtonRef}
+              className="yes-button"
+              onClick={handleYesClick}
+            >
+              Yes
+            </button>
+            <button className="no-button" onClick={handleNoClick}>
+              {noButtonText}
+            </button>
+          </div>
+          <div className="gif_container">
+            <img
+              src="https://media1.giphy.com/media/VM1fcpu2bKs1e2Kdbj/giphy.gif"
+              alt="Cute GIF"
+            />
+          </div>
         </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Add Hero Images Here */}
+      ) : (
+        <div className="container" id="page2">
+          <h1 className="header_text">Knew you would say yes! 💖</h1>
+          <div className="gif_container">
+            <img
+              src="https://media4.giphy.com/media/9XY4f3FgFTT4QlaYqa/giphy.gif"
+              alt="Celebration GIF"
+            />
+          </div>
         </div>
-      </div>
-    </main>
+      )}
+
+      {/* Global CSS styles */}
+      <style jsx global>{`
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background-color: #f9e3e3;
+          font-family: "Arial", sans-serif;
+        }
+
+        .container {
+          text-align: center;
+        }
+
+        .header_text {
+          font-size: 3em;
+          color: #d32f2f;
+        }
+
+        h1 {
+          font-size: 2.5em;
+          color: #d32f2f;
+        }
+
+        .gif_container img {
+          width: 100%;
+          max-width: 500px;
+          height: auto;
+        }
+
+        .buttons {
+          margin-top: 20px;
+        }
+
+        .yes-button {
+          font-size: 1.5em;
+          padding: 10px 20px;
+          margin-right: 10px;
+          background-color: #4caf50;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+
+        .no-button {
+          font-size: 1.5em;
+          padding: 10px 20px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+
+        .gif_container img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 10px;
+          margin-top: 20px;
+        }
+
+        .page-link {
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #2196f3;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          margin-top: 20px;
+        }
+
+        .page-link:hover {
+          background-color: #1976d2;
+        }
+      `}</style>
+    </>
   );
-}
+};
+
+export default ValentinePage;
